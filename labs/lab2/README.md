@@ -1,75 +1,71 @@
-# GridWorld và Value Function
+# GridWorld - Mô phỏng môi trường lưới 3x3
 
-## Giới thiệu
+Đây là một triển khai đơn giản của môi trường **GridWorld** với lưới 3x3 và một trạng thái có phần thưởng +1.
 
-Dự án này là một ví dụ minh họa về cách xây dựng môi trường lưới (GridWorld) và hàm giá trị (Value Function) trong lĩnh vực **Học tăng cường (Reinforcement Learning)**.  
+## 🛠 Cài đặt
 
-GridWorld là một môi trường cơ bản được sử dụng rộng rãi để minh họa các khái niệm cốt lõi trong học tăng cường, chẳng hạn như phần thưởng (reward), trạng thái (state), và giá trị của trạng thái (state value).  
+Trước khi chạy mã, bạn cần cài đặt thư viện cần thiết:
 
-## Cấu trúc mã
+```bash
+pip install numpy
+```
 
-### 1. `GridWorld`
-Lớp `GridWorld` đại diện cho môi trường lưới 2D, với các đặc điểm chính:
-- **Kích thước**: 3x3.
-- **Phần thưởng**: Mỗi ô (trạng thái) có một giá trị phần thưởng, cụ thể:
-  - Các ô thông thường: `0`.
-  - Ô ở góc dưới bên phải: `+1`.
-- **Phương thức**:
-  - `get_reward(state)`: Trả về phần thưởng tại một trạng thái cụ thể.
+## 📜 Mô tả
 
-### 2. `ValueFunction`
-Lớp `ValueFunction` lưu trữ và quản lý giá trị của từng trạng thái:
-- Giá trị ban đầu của các trạng thái được khởi tạo bằng `0`.
-- Có thể **cập nhật** và **truy vấn** giá trị của một trạng thái thông qua các phương thức:
-  - `update_value(state, new_value)`: Cập nhật giá trị mới cho trạng thái.
-  - `get_value(state)`: Trả về giá trị của trạng thái.
+Bài toán **GridWorld** là một môi trường đơn giản trong **Reinforcement Learning**, trong đó một agent di chuyển trên lưới 3x3 và nhận phần thưởng tại một số ô nhất định.
 
-## Mô tả thuật toán
+### 🎯 Môi trường
+- Lưới có kích thước **3x3**.
+- Số hành động có thể thực hiện: **4 hành động (Lên, Xuống, Trái, Phải)**.
+- Phần thưởng:
+  - Ô (2,1) có phần thưởng **+1**.
+  - Các ô còn lại có phần thưởng **0**.
 
-1. **Khởi tạo môi trường**:
-   - Xác định kích thước lưới và phần thưởng tại mỗi trạng thái.
+### 🏗 Cách thức hoạt động
+
+1. **Tạo môi trường GridWorld**:
+   - Môi trường được biểu diễn dưới dạng ma trận 3x3.
+   - Phần thưởng được xác định trước.
 
 2. **Khởi tạo hàm giá trị**:
-   - Giá trị ban đầu của mỗi trạng thái được gán bằng phần thưởng tại trạng thái đó.
+   - Mỗi trạng thái trong lưới có một giá trị ban đầu bằng 0.
+   - Giá trị ban đầu của trạng thái được cập nhật bằng phần thưởng tại trạng thái đó.
 
-3. **In giá trị ban đầu của hàm giá trị**:
-   - In ma trận giá trị, trùng với ma trận phần thưởng.
+3. **Hiển thị giá trị ban đầu của các trạng thái**.
 
-## Mã nguồn
+## 🔢 Tham số chính
 
-```python
-import numpy as np
+| Tham số | Giá trị |
+|---------|--------|
+| Kích thước lưới | 3x3 |
+| Số hành động | 4 |
+| Phần thưởng | Ô (2,1) có +1 |
 
-class GridWorld:
-    def __init__(self):
-        self.grid_size = (3, 3)
-        self.num_actions = 4
-        self.rewards = np.array([
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 1, 0]
-        ])
-    
-    def get_reward(self, state):
-        return self.rewards[state[0], state[1]]
+## ▶️ Chạy chương trình
 
-class ValueFunction:
-    def __init__(self, grid_size):
-        self.values = np.zeros(grid_size)
-        
-    def update_value(self, state, new_value):
-        self.values[state[0], state[1]] = new_value
-        
-    def get_value(self, state):
-        return self.values[state[0], state[1]]
+Để chạy mã, sử dụng lệnh sau trong terminal:
 
-grid_world = GridWorld()
-value_function = ValueFunction(grid_world.grid_size)
+```bash
+python src/ex.py
+```
 
-for i in range(grid_world.grid_size[0]):
-    for j in range(grid_world.grid_size[1]):
-        state = (i, j)
-        value_function.update_value(state, grid_world.get_reward(state))
+Chương trình sẽ hiển thị **giá trị ban đầu của từng trạng thái** trong lưới.
 
-print("Initial Value Function:")
-print(value_function.values)
+## 📈 Kết quả mong đợi
+
+Sau khi chạy chương trình, bạn sẽ thấy giá trị trạng thái được khởi tạo bằng phần thưởng của từng ô:
+
+```
+Initial Value Function:
+[[0. 0. 0.]
+ [0. 0. 0.]
+ [0. 1. 0.]]
+```
+
+## 📌 Ghi chú
+- Mô hình này chỉ khởi tạo giá trị trạng thái, chưa có chính sách hay quá trình học tập.
+- Có thể mở rộng bằng việc áp dụng **Dynamic Programming** hoặc **Reinforcement Learning** để học giá trị tối ưu.
+
+## 📜 Bản quyền
+Mã nguồn được cung cấp miễn phí và có thể sử dụng cho mục đích học tập hoặc nghiên cứu.
+
